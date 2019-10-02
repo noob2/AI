@@ -1,0 +1,48 @@
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>ES6 - App</title>
+  <script type="text/javascript" src="dist/bundle.js"></script>
+  <style>
+    #center {
+      padding: 2rem;
+      text-align: center;
+      margin-top: 0 auto;
+      border: 1px solid black;
+      border-radius: 1rem;
+    }
+
+    ​ table,
+    td,
+    th {
+      border: 1px solid black;
+      padding: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="center">
+    <h2>ACCURACY:</h2>
+    <h3 id="acc"></h3>
+    <h2>ELAPSED TIME:</h2>
+    <h3 id="timer"></h3>
+    <h3 id="timer2"></h3>
+    <button id="stop">STOP</button>
+    <div id="table" style="display:none">
+      <h2>RESULT:</h2>
+      <table id="result">
+        <tr>
+          <th>input</th>
+          <th>expected</th>
+          <th>predicted</th>
+          <th>difference</th>
+        </tr>
+      </table>
+    </div>
+  </div>
+</body>
+
+</html>
