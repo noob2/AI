@@ -9,7 +9,7 @@ let hiddenLayerConfig = {
 };
 let outputLayerConfig = { units: 1, useBias: true };
 let compileConfig = { optimizer: tf.train.adam(), loss: "meanSquaredError" };
-let batchSize = 32;
+let batchSize = 128;
 //----------------------------------------------------------------------------------------------------CONFIG
 
 let model = tf.sequential(); //activation: sigmoid,relu, kernelInitializer: 'ones'
@@ -23,7 +23,7 @@ let tensorData = tf.tidy(() => {
     data.EXAMPLE_DATA.input[i],
     data.EXAMPLE_DATA.input2[i],
     output
-  ]);
+  ]); 
   tf.util.shuffle(shuffledData);
   let inputTensor = tf.tensor(shuffledData.map(el => [el[0], el[1]]));
   let outputTensor = tf.tensor(shuffledData.map(el => el[2]));
@@ -59,11 +59,11 @@ window.onload = () => {
     let res = await model.fit(x_train, y_train, {
       batchSize: batchSize,
       epochs: 50
-    });
+    }); 
     document.getElementById("acc").innerHTML = Number.parseFloat(res.history.loss[0]).toExponential(2);
     let seconds = Math.round((new Date().getTime() - time) / 1000);
     document.getElementById("timer").innerHTML = seconds;
-    if (seconds >= 600) break;
+    if (seconds >= 25) break;
   }
 })().then(() => {
   //-------------------------------------------------------------------------------------------------------TEST
@@ -71,6 +71,7 @@ window.onload = () => {
   let normalisedTestTensor = testTensor.sub(tensorData.inputMin).div(tensorData.inputMax.sub(tensorData.inputMin));
   const preds = model.predict(normalisedTestTensor);
   const unNormPreds = preds.mul(tensorData.outputMax.sub(tensorData.outputMin)).add(tensorData.outputMin);
+ let totalDifference = 0;
   unNormPreds.dataSync().forEach((predictedOutput, i) => {
     let realInput = data.TEST_ARRAY[i];
     let realOutput = data.TEST_ARRAY[i][0] * data.TEST_ARRAY[i][1];
@@ -83,7 +84,10 @@ window.onload = () => {
     cell1.innerHTML = realInput;
     cell2.innerHTML = realOutput.toFixed(2);
     cell3.innerHTML = predictedOutput.toFixed(2);
-    cell4.innerHTML = Math.abs(((predictedOutput - realOutput) / predictedOutput) * 100).toFixed(2) + "%";
+    let percentage = Math.abs(((predictedOutput - realOutput) / predictedOutput) * 100)
+    totalDifference += percentage
+    cell4.innerHTML =  percentage.toFixed(2)+ "%";
   });
+  document.getElementById("acc").innerHTML += ' ---------- average error: '+(totalDifference/data.TEST_ARRAY.length).toFixed(2)+'%'
   document.getElementById("table").style.display = "grid";
 });
