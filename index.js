@@ -55,18 +55,15 @@ window.onload = () => {
 };
 (async () => {
   let time = new Date().getTime();
-  let i = 0;
   while (calculate) {
-    i++;
     let res = await model.fit(x_train, y_train, {
       batchSize: batchSize,
-      epochs: 200
+      epochs: 50
     });
-    document.getElementById("acc").innerHTML = res.history.loss[0].toFixed(9);
+    document.getElementById("acc").innerHTML = Number.parseFloat(res.history.loss[0]).toExponential(2);
     let seconds = Math.round((new Date().getTime() - time) / 1000);
     document.getElementById("timer").innerHTML = seconds;
-    document.getElementById("timer2").innerHTML = i * 200;
-    if (seconds >= 200) break;
+    if (seconds >= 600) break;
   }
 })().then(() => {
   //-------------------------------------------------------------------------------------------------------TEST
